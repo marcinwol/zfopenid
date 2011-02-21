@@ -1,0 +1,27 @@
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>OpenID with Zend Framework</title>
+        <?php echo $this->headLink()->appendStylesheet($this->baseUrl('/css/openid.css')); ?>
+
+        <?php
+        $this->headScript()->appendFile($this->baseUrl('/js/jquery-1.4.4.min.js'));
+        $this->headScript()->appendFile($this->baseUrl('/js/openid-jquery.js'));
+        $this->headScript()->appendFile($this->baseUrl('/js/openid-en.js'));
+
+        echo $this->headScript();
+        ?>
+
+    </head>
+    <body>
+        <div>
+            <h1>OpenID with Zend Framework</h1>
+            <a href="<?php echo $this->baseUrl();?>">Home</a>
+            <h2 style="color:green"><?php echo $this->flashMessenger(); ?></h2>
+
+
+            <?php echo $this->layout()->content ?>
+        </div>
+    </body>
+</html>
