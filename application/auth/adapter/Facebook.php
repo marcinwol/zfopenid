@@ -7,7 +7,6 @@
 /**
  * Description of Facebook
  *
- * @author marcin
  */
 class My_Auth_Adapter_Facebook implements Zend_Auth_Adapter_Interface
 {
