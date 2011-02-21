@@ -6,7 +6,7 @@
 
 /**
  * Description of Facebook
- *
+ *@author Michael Krotscheck (http://www.krotscheck.net/2010/08/21/zend_auth_adapter_facebook.html)
  */
 class My_Auth_Adapter_Facebook implements Zend_Auth_Adapter_Interface
 {
