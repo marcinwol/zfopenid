@@ -1,7 +1,4 @@
 tests/log
-library/Zend
-!library/Zend/OpenId/Consumer.php
-!library/Zend/OpenId/Consumer_Original.php
 .zfproject.xml
 *.bak
 *.orig
