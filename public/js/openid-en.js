@@ -3,7 +3,7 @@
 	http://code.google.com/p/openid-selector/
 	
 	This code is licensed under the New BSD License.
-*/
+ */
 
 var providers_large = {
     google : {
@@ -29,11 +29,28 @@ var providers_large = {
         label : 'Enter your OpenID.',
         url : null
     },
+//    houseshare : {
+//        name : 'HouseShare',
+//        label : 'Login using our webiste.',
+//        url: "javascript:houseshare_click();"
+//    }
     facebook : {
         name: 'Facebook',
         url: "https://www.facebook.com"
+    },
+    twitter : {
+        name: 'Twitter',
+        url: "https://www.twitter.com"
     }
 };
+
+function houseshare_click() {
+    console.log('asfdsadf');
+}
+
+//function facebook_click() {
+//     $('#<id of html fbconnect element>').click();
+//   }
 
 var providers_small = {
     livejournal : {

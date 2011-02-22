@@ -26,5 +26,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $autoLoader->pushAutoloader($resourceLoader);
     }
 
+     protected function _initAppKeysToRegistry() {
+
+         $appkeys = new Zend_Config_Ini(APPLICATION_PATH . '/configs/appkeys.ini');
+         Zend_Registry::set('keys', $appkeys);   
+
+     }
+
 }
 
