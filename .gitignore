@@ -1,7 +1,6 @@
 tests/log
-application/config/appkeys.ini
 .zfproject.xml
 *.bak
 *.orig
-.gitignore.swp
+/.gitignore.swp
 /application/configs/appkeys.ini

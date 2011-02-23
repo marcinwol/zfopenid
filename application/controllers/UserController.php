@@ -32,38 +32,28 @@ class UserController extends Zend_Controller_Action {
         // $openid_identifier will be set when users 'clicks' on the account provider
         $openid_identifier = $this->getRequest()->getParam('openid_identifier', null);
 
-        // $openid_mode will be sent after first query to the openid provider
+        // $openid_mode will be set after first query to the openid provider
         $openid_mode = $this->getRequest()->getParam('openid_mode', null);
 
-        // this one is for facebook connect
+        // this one will be set by facebook connect
         $code = $this->getRequest()->getParam('code', null);
 
-        // this is for twitter oath
+        // while this one will be set by twitter
         $oauth_token = $this->getRequest()->getParam('oauth_token', null);
 
 
         // do the first query to the openid provider
-        if ($openid_identifier && null === $openid_mode) {
+        if ($openid_identifier) {
 
             if ('https://www.twitter.com' == $openid_identifier) {
                 $adapter = $this->_getTwitterAdapter();
             } else if ('https://www.facebook.com' == $openid_identifier) {
                 $adapter = $this->_getFacebookAdapter();
             } else {
-                // for openid
-                // fetch only email
-                $propertiesToRequest = array("email" => true);
-
-                if ('https://www.google.com/accounts/o8/id' == $openid_identifier || 'http://me.yahoo.com/' == $openid_identifier) {
-                    $ext = new My_OpenId_Extension_AttributeExchange($propertiesToRequest);
-                } else {
-                    $ext = new Zend_OpenId_Extension_Sreg($propertiesToRequest);
-                }
-
-                $adapter = new Zend_Auth_Adapter_OpenId($openid_identifier);
-                $adapter->setExtensions($ext);
+                // for openid fetch only email
+                $toFetch = array("email" => true,'firstname'=> true);
+                $adapter = $this->_getOpenIdAdapter($openid_identifier, $toFetch );
             }
-
 
             // here a user is redirect to the provider for loging
             $result = $auth->authenticate($adapter);
@@ -71,7 +61,6 @@ class UserController extends Zend_Controller_Action {
             // the following two lines should never be executed unless the redirection faild.
             $this->_helper->FlashMessenger('Redirection faild');
             return $this->_redirect('/index/index');
-            
         } else if ($openid_mode || $code || $oauth_token) {
             // this will be exectued after provider redirected the user back to us
 
@@ -80,20 +69,18 @@ class UserController extends Zend_Controller_Action {
                 $adapter = $this->_getFacebookAdapter();
             } else if ($oauth_token) {
                 // for twitter
-                $adapter = $this->_getTwitterAdapter();
-                $adapter->setQueryData($_GET);
+                $adapter = $this->_getTwitterAdapter()->setQueryData($_GET);
             } else {
                 // for openid
-                $adapter = new Zend_Auth_Adapter_OpenId();
+                $adapter = $this->_getOpenIdAdapter();
             }
 
             $result = $auth->authenticate($adapter);
 
-
             var_dump($result->getMessages());
             var_dump($result->getIdentity());
             var_dump($_GET);
-           // var_dump($ext->getProperties());
+            // var_dump($ext->getProperties());
             return;
 
 
@@ -131,7 +118,32 @@ class UserController extends Zend_Controller_Action {
      */
     protected function _getTwitterAdapter() {
         extract($this->_keys->twitter->toArray());
-        return new My_Auth_Adapter_Oauth_Twitter(array(),$appid, $secret, $redirecturi);
+        return new My_Auth_Adapter_Oauth_Twitter(array(), $appid, $secret, $redirecturi);
+    }
+
+    /**
+     * Get Zend_Auth_Adapter_OpenId adapter
+     *
+     * @param string $openid_identifier
+     * @param array $propertiesToRequest
+     * @return Zend_Auth_Adapter_OpenId
+     */
+    protected function _getOpenIdAdapter($openid_identifier = null, array $propertiesToRequest = array()) {
+
+        $adapter = new Zend_Auth_Adapter_OpenId($openid_identifier);
+
+        if (!empty($propertiesToRequest)) {
+
+            if ('https://www.google.com/accounts/o8/id' == $openid_identifier || 'http://me.yahoo.com/' == $openid_identifier) {
+                $ext = new My_OpenId_Extension_AttributeExchange($propertiesToRequest);
+            } else {
+                $ext = new Zend_OpenId_Extension_Sreg($propertiesToRequest);
+            }
+
+            $adapter->setExtensions($ext);
+        }
+
+        return $adapter;
     }
 
 }
