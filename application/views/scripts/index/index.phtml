@@ -1,5 +1,22 @@
 <div>
 
-   <?php echo $this->profileLink();?>
+    <?php if ($this->identity): ?>
+
+    <h2>You are logged</h2>
+        You identity:
+        <pre>
+        <?php echo $this->identity['identity']; ?>
+    </pre>
+    <?php if (isset($this->identity['properties'])): ?>
+            Data fetched:
+            <pre>
+        <?php echo var_export($this->identity['properties'], true); ?>
+        </pre>
+    <?php endif; ?>
+        
+    <?php else: ?>
+            <h2>You are not logged</h2>
+    <?php endif; ?>
+
 
 </div>

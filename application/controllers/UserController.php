@@ -50,9 +50,20 @@ class UserController extends Zend_Controller_Action {
             } else if ('https://www.facebook.com' == $openid_identifier) {
                 $adapter = $this->_getFacebookAdapter();
             } else {
-                // for openid fetch only email
-                $toFetch = array("email" => true,'firstname'=> true);
-                $adapter = $this->_getOpenIdAdapter($openid_identifier, $toFetch );
+                // for openid
+                $adapter = $this->_getOpenIdAdapter($openid_identifier);
+
+                // specify what to grab from the provider and what extension to use
+                // for this purpose
+                $toFetch = array('email' => true);
+                // for google and yahoo use AtributeExchange Extension
+                if ('https://www.google.com/accounts/o8/id' == $openid_identifier || 'http://me.yahoo.com/' == $openid_identifier) {
+                    $ext = $this->_getOpenIdExt('ax', $toFetch);
+                } else {
+                    $ext = $this->_getOpenIdExt('sreg', $toFetch);
+                }
+
+                $adapter->setExtensions($ext);
             }
 
             // here a user is redirect to the provider for loging
@@ -71,22 +82,45 @@ class UserController extends Zend_Controller_Action {
                 // for twitter
                 $adapter = $this->_getTwitterAdapter()->setQueryData($_GET);
             } else {
-                // for openid
-                $adapter = $this->_getOpenIdAdapter();
+                // for openid                
+                $adapter = $this->_getOpenIdAdapter(null);
+
+                // specify what to grab from the provider and what extension to use
+                // for this purpose
+                $ext = null;
+                $toFetch = array('email' => true);
+                // for google and yahoo use AtributeExchange Extension
+                if (isset($_GET['openid_ns_ext1']) || isset($_GET['openid_ns_ax'])) {
+                    $ext = $this->_getOpenIdExt('ax', $toFetch);
+                } else if (isset($_GET['openid_ns_sreg'])) {
+                    $ext = $this->_getOpenIdExt('sreg', $toFetch);
+                }
+                if ($ext) {
+                    $ext->parseResponse($_GET);
+                    $adapter->setExtensions($ext);
+                }
             }
 
             $result = $auth->authenticate($adapter);
 
-            var_dump($result->getMessages());
-            var_dump($result->getIdentity());
-            var_dump($_GET);
-            // var_dump($ext->getProperties());
-            return;
+//            var_dump($result->getMessages());
+//            var_dump($ext->getProperties());
+//
+//            var_dump($result->getIdentity());
+//           var_dump($_GET);
+////            // var_dump($ext->getProperties());
+//           return;
 
 
             if ($result->isValid()) {
+                $toStore = array('identity' => $auth->getIdentity());
+                
+                if ($ext) {
+                    $toStore['properties'] = $ext->getProperties();
+                }
+                $auth->getStorage()->write($toStore);
+
                 $this->_helper->FlashMessenger('Successful OpenID authentication');
-                $auth->getStorage()->write($this->getRequest()->getParams());
                 return $this->_redirect('/index/index');
             } else {
                 $this->_helper->FlashMessenger('Failed authentication');
@@ -99,6 +133,8 @@ class UserController extends Zend_Controller_Action {
     public function logoutAction() {
         $auth = Zend_Auth::getInstance();
         $auth->clearIdentity();
+        $this->_helper->FlashMessenger('You were logged out');
+        return $this->_redirect('/index/index');
     }
 
     /**
@@ -125,25 +161,30 @@ class UserController extends Zend_Controller_Action {
      * Get Zend_Auth_Adapter_OpenId adapter
      *
      * @param string $openid_identifier
-     * @param array $propertiesToRequest
      * @return Zend_Auth_Adapter_OpenId
      */
-    protected function _getOpenIdAdapter($openid_identifier = null, array $propertiesToRequest = array()) {
+    protected function _getOpenIdAdapter($openid_identifier = null) {
+        return new Zend_Auth_Adapter_OpenId($openid_identifier);
+    }
 
-        $adapter = new Zend_Auth_Adapter_OpenId($openid_identifier);
+    /**
+     * Get Zend_OpenId_Extension. Sreg or Ax. 
+     * 
+     * @param string $extType Possible values: 'sreg' or 'ax'
+     * @param array $propertiesToRequest
+     * @return Zend_OpenId_Extension|null
+     */
+    protected function _getOpenIdExt($extType, array $propertiesToRequest) {
 
-        if (!empty($propertiesToRequest)) {
+        $ext = null;
 
-            if ('https://www.google.com/accounts/o8/id' == $openid_identifier || 'http://me.yahoo.com/' == $openid_identifier) {
-                $ext = new My_OpenId_Extension_AttributeExchange($propertiesToRequest);
-            } else {
-                $ext = new Zend_OpenId_Extension_Sreg($propertiesToRequest);
-            }
-
-            $adapter->setExtensions($ext);
+        if ('ax' == $extType) {
+            $ext = new My_OpenId_Extension_AttributeExchange($propertiesToRequest);
+        } elseif ('sreg' == $extType) {
+            $ext = new Zend_OpenId_Extension_Sreg($propertiesToRequest);
         }
 
-        return $adapter;
+        return $ext;
     }
 
 }

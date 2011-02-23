@@ -29,18 +29,9 @@ class My_View_Helper_ProfileLink extends Zend_View_Helper_Abstract {
 
         $html = '<a href="'.$baseUrl.'/user/login"> Login </a>';
 
-        if ($auth->hasIdentity()) {
-
-            $identity = $auth->getIdentity();
-
-            $html = "You identity:" . $identity['openid_identity'] . '<br />' ;
-            var_dump($identity);
-           // $html .= 'Returned from the openID provider:' . var_export($identity) . '<br />';
-            $html .= '<a href="'.$baseUrl.'/user/logout"> Logout </a>';
-            return $html;
-        }
-
-        
+        if ($auth->hasIdentity()) {          
+            $html = '<a href="'.$baseUrl.'/user/logout"> Logout </a>';
+        }        
 
         return $html;
     }

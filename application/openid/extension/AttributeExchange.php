@@ -115,7 +115,7 @@ class My_OpenId_Extension_AttributeExchange extends Zend_OpenId_Extension
 
 	private function splitParams($params)
 	{
-		$final = array();
+		$final = array();        
 
 		// Loop the parameters
 		foreach ($params as $identifier => $value)
@@ -255,6 +255,7 @@ class My_OpenId_Extension_AttributeExchange extends Zend_OpenId_Extension
     public function parseResponse($params)
     {
     	$params = $this->splitParams($params);
+          
     	$ax = null;
 
     	// Get the data name space
@@ -274,6 +275,8 @@ class My_OpenId_Extension_AttributeExchange extends Zend_OpenId_Extension
     		}
     	}
 
+             
+
     	// Check if the data was found
     	if ($ax == null)
     		return false;
@@ -281,6 +284,8 @@ class My_OpenId_Extension_AttributeExchange extends Zend_OpenId_Extension
     	// Verify the mode is fetch_response
     	if (isset($ax['mode']) && $ax['mode'] != 'fetch_response')
     		return false;
+
+       
 
     	// Get the attributes
     	foreach ($ax['value'] as $attr => $value)
