@@ -2,20 +2,31 @@
 
     <?php if ($this->identity): ?>
 
-    <h2>You are logged</h2>
+        <h2>You are logged</h2>
+
         You identity:
         <pre>
-        <?php echo $this->identity['identity']; ?>
-    </pre>
+           <?php echo $this->identity['identity']; ?>
+        </pre>
     <?php if (isset($this->identity['properties'])): ?>
             Data fetched:
             <pre>
-        <?php echo var_export($this->identity['properties'], true); ?>
-        </pre>
+         <?php echo var_export($this->identity['properties'], true); ?>
+         </pre>
+
+
+    <?php
+            if (isset($this->identity['properties']['email'])) {
+                echo 'Your gravatar:';
+                echo $this->gravatar('example@example.com');
+            }
+    ?>
+
+
     <?php endif; ?>
-        
+
     <?php else: ?>
-            <h2>You are not logged</h2>
+                <h2>You are not logged</h2>
     <?php endif; ?>
 
 

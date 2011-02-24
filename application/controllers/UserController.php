@@ -103,24 +103,26 @@ class UserController extends Zend_Controller_Action {
 
             $result = $auth->authenticate($adapter);
 
-//            var_dump($result->getMessages());
-//            var_dump($ext->getProperties());
-//
-//            var_dump($result->getIdentity());
-//           var_dump($_GET);
-////            // var_dump($ext->getProperties());
-//           return;
+          //  var_dump($result->getMessages());
+         //   var_dump($ext->getProperties());
+
+            var_dump($result->getIdentity());
+         //  var_dump($_GET);
+//            // var_dump($ext->getProperties());
+           return;
 
 
             if ($result->isValid()) {
                 $toStore = array('identity' => $auth->getIdentity());
                 
                 if ($ext) {
+                    // for openId
                     $toStore['properties'] = $ext->getProperties();
                 }
+                
                 $auth->getStorage()->write($toStore);
 
-                $this->_helper->FlashMessenger('Successful OpenID authentication');
+                $this->_helper->FlashMessenger('Successful authentication');
                 return $this->_redirect('/index/index');
             } else {
                 $this->_helper->FlashMessenger('Failed authentication');
