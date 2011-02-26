@@ -103,12 +103,12 @@ class UserController extends Zend_Controller_Action {
 
             $result = $auth->authenticate($adapter);
 
-          //  var_dump($result->getMessages());
-         //   var_dump($ext->getProperties());
-
+            var_dump($result->getMessages());
+//         //   var_dump($ext->getProperties());
+////
             var_dump($result->getIdentity());
-         //  var_dump($_GET);
-//            // var_dump($ext->getProperties());
+////         //  var_dump($_GET);
+//////            // var_dump($ext->getProperties());
            return;
 
 
@@ -118,6 +118,10 @@ class UserController extends Zend_Controller_Action {
                 if ($ext) {
                     // for openId
                     $toStore['properties'] = $ext->getProperties();
+                } else if ($code) {
+                    // for facebook
+                    $msgs = $result->getMessages();                  
+                   $toStore['properties'] = (array) $msgs['user'];
                 }
                 
                 $auth->getStorage()->write($toStore);
@@ -166,7 +170,11 @@ class UserController extends Zend_Controller_Action {
      * @return Zend_Auth_Adapter_OpenId
      */
     protected function _getOpenIdAdapter($openid_identifier = null) {
-        return new Zend_Auth_Adapter_OpenId($openid_identifier);
+        $adapter = new Zend_Auth_Adapter_OpenId($openid_identifier);
+        $dir = APPLICATION_PATH . '/../tmp';
+        $adapter->setStorage(new Zend_OpenId_Consumer_Storage_File($dir));
+
+        return $adapter;
     }
 
     /**
