@@ -211,16 +211,17 @@ class My_Auth_Adapter_Oauth implements Zend_Auth_Adapter_Interface
             } else {
 
                 $accessToken = $this->_consumer->getAccessToken($this->_queryData, unserialize($session->requestToken));
+              
 
                 $this->setAccessToken($accessToken);
 
                 unset($session->requestToken);
 
-                $body = $accessToken->getResponse()->getBody();
+                $body = $accessToken->getResponse()->getBody();              
 
                 $returnParams = array();
 
-                $parts = explode('&', $body);
+                $parts = explode('&', $body);               
                 foreach ($parts as $kvpair) {
                     $pair = explode('=', $kvpair);
                     $returnParams[rawurldecode($pair[0])] = rawurldecode($pair[1]);

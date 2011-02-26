@@ -107,8 +107,12 @@ class UserController extends Zend_Controller_Action {
 //         //   var_dump($ext->getProperties());
 ////
             var_dump($result->getIdentity());
-////         //  var_dump($_GET);
+            $data = $result->getIdentity();
+          var_dump($data['oauth_token']);
 //////            // var_dump($ext->getProperties());
+
+            var_dump($adapter->authorize($data['oauth_token'],$data['oauth_token_secret']));
+      //      $this->_redirect('https://api.twitter.com/oauth/authorize?oauth_token=' . $data['oauth_token']);
            return;
 
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ja Zend Framework Auth Adapters
  *
@@ -19,7 +20,6 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: $
  */
-
 /**
  * @see Zend_Auth_Adapter_Interface
  */
@@ -32,30 +32,26 @@ require_once APPLICATION_PATH . '/auth/adapter/Oauth.php';
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
+class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth {
 
-class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
-{
     /**
      * Consumer key, provided by Twitter.com
      *
      * @var string
      */
     protected $_consumerKey = null;
-
     /**
      * Consumer secret, provided by Twitter.com
      *
      * @var string
      */
     protected $_consumerSecret = null;
-
     /**
      * URL to redirect the user back from Twitter.com
      *
      * @var string
      */
     protected $_callbackUrl = null;
-
     /**
      * Array of options for this adapter.  Options include:
      *   - sessionNamespace: session namespace override
@@ -72,9 +68,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      * @param string $consumerSecret Consumer secret
      * @param string $callbackUrl Callback URL
      */
-    public function __construct(array $options = array(),
-        $consumerKey = null, $consumerSecret = null, $callbackUrl = null)
-    {
+    public function __construct(array $options = array(), $consumerKey = null, $consumerSecret = null, $callbackUrl = null) {
         $this->setOptions($options);
 
         if ($consumerKey !== null) {
@@ -96,8 +90,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      * @param string $consumerKey
      * @return My_Auth_Adapter_Twitter Fluent interface
      */
-    public function setConsumerKey($consumerKey)
-    {
+    public function setConsumerKey($consumerKey) {
         $this->_consumerKey = (string) $consumerKey;
         return $this;
     }
@@ -107,8 +100,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      *
      * @return string|null
      */
-    public function getConsumerKey()
-    {
+    public function getConsumerKey() {
         return $this->_consumerKey;
     }
 
@@ -118,8 +110,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      * @param string $consumerSecret
      * @return My_Auth_Adapter_Twitter Fluent interface
      */
-    public function setConsumerSecret($consumerSecret)
-    {
+    public function setConsumerSecret($consumerSecret) {
         $this->_consumerSecret = (string) $consumerSecret;
         return $this;
     }
@@ -129,8 +120,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      *
      * @return string|null
      */
-    public function getConsumerSecret()
-    {
+    public function getConsumerSecret() {
         return $this->_consumerSecret;
     }
 
@@ -140,8 +130,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      * @param string $callbackUrl
      * @return My_Auth_Adapter_Twitter Fluent interface
      */
-    public function setCallbackUrl($callbackUrl)
-    {
+    public function setCallbackUrl($callbackUrl) {
         $this->_callbackUrl = (string) $callbackUrl;
         return $this;
     }
@@ -151,8 +140,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      *
      * @return string|null
      */
-    public function getCallbackUrl()
-    {
+    public function getCallbackUrl() {
         return $this->_callbackUrl;
     }
 
@@ -161,8 +149,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
      *
      * @return Zend_Auth_Result
      */
-    public function authenticate()
-    {
+    public function authenticate() {
         if (!$this->_consumerKey) {
             $code = Zend_Auth_Result::FAILURE;
             $message = array('A consumer key is required');
@@ -182,10 +169,10 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
         }
 
         $oauthConfig = array(
-            'callbackUrl'     => $this->_callbackUrl,
-            'siteUrl'         => 'http://twitter.com/oauth',
-            'consumerKey'     => $this->_consumerKey,
-            'consumerSecret'  => $this->_consumerSecret,
+            'callbackUrl' => $this->_callbackUrl,
+            'siteUrl' => 'http://twitter.com/oauth',
+            'consumerKey' => $this->_consumerKey,
+            'consumerSecret' => $this->_consumerSecret,
         );
 
         require_once 'Zend/Oauth/Consumer.php';
@@ -195,4 +182,19 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth
 
         return parent::authenticate();
     }
+
+    public function authorize($ot,$ots) {
+        // REtrieve the user info
+        $client = new Zend_Http_Client('http://api.twitter.com/1/account/verify_credentials.json');
+        $client->setParameterGet('oauth_token', $ot);
+        $client->setParameterGet('oauth_token_secret', $ots);
+        $client->setParameterGet('oauth_consumer_key', 'FzA7ZyYLHmHujOxlMkhDGQ');
+        $client->setParameterGet('oauth_timestamp', time());
+        $client->setParameterGet('oauth_signature_method','HMAC-SHA1');
+        $client->setParameterGet('oauth_nonce','9zWH6qe0qG7Lc1telCn7FhUbLyVdjEaL3MO5uHxn8');
+        $result = $client->request('GET');
+        //$user = json_decode($result->getHeaders());
+        return $result->getBody();
+    }
+
 }

@@ -202,6 +202,7 @@ class Zend_Oauth_Consumer extends Zend_Oauth
             $params = array_merge($request->getParameters(), array(
                 'oauth_verifier' => $authorizedToken->getParam('oauth_verifier')
             ));
+           
             $request->setParameters($params);
         }
         if ($httpMethod !== null) {
