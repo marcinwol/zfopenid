@@ -26,6 +26,8 @@
 require_once APPLICATION_PATH . '/auth/adapter/Oauth.php';
 
 /**
+ * I (i.e. Marcin) added verifyCredentials method as well as $_oathConfig variable.
+ *
  * @category   Ja/Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter
@@ -60,6 +62,8 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth {
      */
     protected $_options = null;
 
+    protected $_oathConfig = array();
+
     /**
      * Constructor
      *
@@ -82,6 +86,13 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth {
         if ($callbackUrl !== null) {
             $this->setCallbackUrl($callbackUrl);
         }
+
+        $this->_oathConfig = array(
+            'callbackUrl' => $this->_callbackUrl,
+            'siteUrl' => 'http://twitter.com/oauth',
+            'consumerKey' => $this->_consumerKey,
+            'consumerSecret' => $this->_consumerSecret,
+        );
     }
 
     /**
@@ -168,33 +179,32 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth {
             return new Zend_Auth_Result($code, '', $message);
         }
 
-        $oauthConfig = array(
-            'callbackUrl' => $this->_callbackUrl,
-            'siteUrl' => 'http://twitter.com/oauth',
-            'consumerKey' => $this->_consumerKey,
-            'consumerSecret' => $this->_consumerSecret,
-        );
-
         require_once 'Zend/Oauth/Consumer.php';
-        $consumer = new Zend_Oauth_Consumer($oauthConfig);
+        $consumer = new Zend_Oauth_Consumer($this->_oathConfig);
 
         $this->setConsumer($consumer);
 
         return parent::authenticate();
     }
 
-    public function authorize($ot,$ots) {
-        // REtrieve the user info
-        $client = new Zend_Http_Client('http://api.twitter.com/1/account/verify_credentials.json');
-        $client->setParameterGet('oauth_token', $ot);
-        $client->setParameterGet('oauth_token_secret', $ots);
-        $client->setParameterGet('oauth_consumer_key', 'FzA7ZyYLHmHujOxlMkhDGQ');
-        $client->setParameterGet('oauth_timestamp', time());
-        $client->setParameterGet('oauth_signature_method','HMAC-SHA1');
-        $client->setParameterGet('oauth_nonce','9zWH6qe0qG7Lc1telCn7FhUbLyVdjEaL3MO5uHxn8');
-        $result = $client->request('GET');
-        //$user = json_decode($result->getHeaders());
-        return $result->getBody();
+    /**
+     * Makes a http://api.twitter.com/version/account/verify_credentials.json
+     * request. Returns a representation of the requesting user
+     * if authentication was successful
+     *
+     * @return array representation of the requesting user if authentication was successful
+     */
+    public function verifyCredentials() {        
+
+        $accessToken = $this->getAccessToken();
+
+        $client = $accessToken->getHttpClient($this->_oathConfig);
+        $client->setUri('http://api.twitter.com/1/account/verify_credentials.json');
+
+
+        $response = $client->request(Zend_Http_Client::GET);
+
+        return json_decode($response->getBody());
     }
 
 }
