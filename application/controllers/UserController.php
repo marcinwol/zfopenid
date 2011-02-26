@@ -81,6 +81,7 @@ class UserController extends Zend_Controller_Action {
             } else if ($oauth_token) {
                 // for twitter
                 $adapter = $this->_getTwitterAdapter()->setQueryData($_GET);
+               
             } else {
                 // for openid                
                 $adapter = $this->_getOpenIdAdapter(null);
@@ -92,6 +93,7 @@ class UserController extends Zend_Controller_Action {
                 // for google and yahoo use AtributeExchange Extension
                 if (isset($_GET['openid_ns_ext1']) || isset($_GET['openid_ns_ax'])) {
                     $ext = $this->_getOpenIdExt('ax', $toFetch);
+
                 } else if (isset($_GET['openid_ns_sreg'])) {
                     $ext = $this->_getOpenIdExt('sreg', $toFetch);
                 }
@@ -103,19 +105,6 @@ class UserController extends Zend_Controller_Action {
 
             $result = $auth->authenticate($adapter);
 
-            var_dump($result->getMessages());
-//         //   var_dump($ext->getProperties());
-////
-            var_dump($result->getIdentity());
-            $data = $result->getIdentity();
-          var_dump($data['oauth_token']);
-//////            // var_dump($ext->getProperties());
-
-            var_dump($adapter->verifyCredentials());
-      //      $this->_redirect('https://api.twitter.com/oauth/authorize?oauth_token=' . $data['oauth_token']);
-           return;
-
-
             if ($result->isValid()) {
                 $toStore = array('identity' => $auth->getIdentity());
                 
@@ -126,6 +115,13 @@ class UserController extends Zend_Controller_Action {
                     // for facebook
                     $msgs = $result->getMessages();                  
                    $toStore['properties'] = (array) $msgs['user'];
+                } else if ($oauth_token) {
+                    // for twitter
+                    $identity = $result->getIdentity();
+                    // get user info
+                    $twitterUserData = $adapter->verifyCredentials();
+                    $toStore = array('identity' => $identity['user_id']);
+                    $toStore['properties'] = (array) $twitterUserData;
                 }
                 
                 $auth->getStorage()->write($toStore);
