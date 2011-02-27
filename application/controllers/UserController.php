@@ -55,7 +55,8 @@ class UserController extends Zend_Controller_Action {
 
                 // specify what to grab from the provider and what extension to use
                 // for this purpose
-                $toFetch = array('email' => true);
+                $toFetch = $this->_keys->openid->tofetch->toArray();
+                
                 // for google and yahoo use AtributeExchange Extension
                 if ('https://www.google.com/accounts/o8/id' == $openid_identifier || 'http://me.yahoo.com/' == $openid_identifier) {
                     $ext = $this->_getOpenIdExt('ax', $toFetch);
@@ -75,13 +76,14 @@ class UserController extends Zend_Controller_Action {
         } else if ($openid_mode || $code || $oauth_token) {
             // this will be exectued after provider redirected the user back to us
 
+          //  var_dump($_GET);return;
+
             if ($code) {
                 // for facebook
                 $adapter = $this->_getFacebookAdapter();
             } else if ($oauth_token) {
                 // for twitter
                 $adapter = $this->_getTwitterAdapter()->setQueryData($_GET);
-               
             } else {
                 // for openid                
                 $adapter = $this->_getOpenIdAdapter(null);
@@ -89,41 +91,48 @@ class UserController extends Zend_Controller_Action {
                 // specify what to grab from the provider and what extension to use
                 // for this purpose
                 $ext = null;
-                $toFetch = array('email' => true);
+                
+                $toFetch = $this->_keys->openid->tofetch->toArray();
+                
                 // for google and yahoo use AtributeExchange Extension
                 if (isset($_GET['openid_ns_ext1']) || isset($_GET['openid_ns_ax'])) {
                     $ext = $this->_getOpenIdExt('ax', $toFetch);
-
                 } else if (isset($_GET['openid_ns_sreg'])) {
                     $ext = $this->_getOpenIdExt('sreg', $toFetch);
                 }
+
                 if ($ext) {
                     $ext->parseResponse($_GET);
                     $adapter->setExtensions($ext);
                 }
             }
 
+            // var_dump($_GET);return;
+
             $result = $auth->authenticate($adapter);
 
             if ($result->isValid()) {
                 $toStore = array('identity' => $auth->getIdentity());
-                
+
                 if ($ext) {
                     // for openId
                     $toStore['properties'] = $ext->getProperties();
                 } else if ($code) {
                     // for facebook
-                    $msgs = $result->getMessages();                  
-                   $toStore['properties'] = (array) $msgs['user'];
+                    $msgs = $result->getMessages();
+                    $toStore['properties'] = (array) $msgs['user'];
                 } else if ($oauth_token) {
                     // for twitter
                     $identity = $result->getIdentity();
                     // get user info
-                    $twitterUserData = $adapter->verifyCredentials();
+                    $twitterUserData = (array) $adapter->verifyCredentials();
                     $toStore = array('identity' => $identity['user_id']);
-                    $toStore['properties'] = (array) $twitterUserData;
+                    if (isset($twitterUserData['status'])) {
+                        $twitterUserData['status'] = (array) $twitterUserData['status'];
+                    }
+                    $toStore['properties'] = $twitterUserData;
                 }
-                
+
                 $auth->getStorage()->write($toStore);
 
                 $this->_helper->FlashMessenger('Successful authentication');
@@ -172,6 +181,12 @@ class UserController extends Zend_Controller_Action {
     protected function _getOpenIdAdapter($openid_identifier = null) {
         $adapter = new Zend_Auth_Adapter_OpenId($openid_identifier);
         $dir = APPLICATION_PATH . '/../tmp';
+
+        if (!file_exists($dir)) {
+            if (!mkdir($dir)) {
+                throw new Zend_Exception("Cannot create $dir to store tmp auth data.");
+            }
+        }
         $adapter->setStorage(new Zend_OpenId_Consumer_Storage_File($dir));
 
         return $adapter;

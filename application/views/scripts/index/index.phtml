@@ -1,32 +1,44 @@
 <div>
 
     <?php if ($this->identity): ?>
+        <h2>You are logged as:</h2>
+      
 
-        <h2>You are logged</h2>
+        <table class="user-profile">
+            <tbody>
+                <tr>
+                    <td class="user-gravatar">
+                        <div>
+                    <?php echo $this->gravatar($this->email, array('defaultImg' => 'identicon'));  ?>
+                            </div>
+                 
+                   </td>
+                <td>
+        <?php if (isset($this->identity['properties'])): ?>
+                    <table>
+                        <tbody>
 
-        You identity:
-        <pre>
-           <?php echo $this->identity['identity']; ?>
-        </pre>
-    <?php if (isset($this->identity['properties'])): ?>
-            Data fetched:
-            <pre>
-         <?php echo var_export($this->identity['properties'], true); ?>
-         </pre>
-
-
-    <?php
-            if (isset($this->identity['properties']['email'])) {
-                echo 'Your gravatar:';
-                echo $this->gravatar('example@example.com');
-            }
-    ?>
-
-
-    <?php endif; ?>
+                            <?php
+                            foreach ($this->identity['properties'] as $p => $v) {
+                               echo $this->partial('_partial/properties.phtml', array($p, $v) );
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+      
+ 
+        <?php endif; ?>
+                </td>
+            </tr>
+                        </tbody>
+                    </table>
+         <div class="identity">
+               Your identity: <?php echo $this->identity['identity']; ?>
+        </div>
+        
 
     <?php else: ?>
-                <h2>You are not logged</h2>
+                            <h2>You are not logged</h2>
     <?php endif; ?>
 
 

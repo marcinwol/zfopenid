@@ -4,3 +4,4 @@ tests/log
 *.orig
 /.gitignore.swp
 /application/configs/appkeys.ini
+/tmp

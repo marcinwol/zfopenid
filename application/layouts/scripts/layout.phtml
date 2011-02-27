@@ -3,7 +3,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>OpenID with Zend Framework</title>
-        <?php echo $this->headLink()->appendStylesheet($this->baseUrl('/css/openid.css')); ?>
+        <?php 
+        $this->headLink()->appendStylesheet($this->baseUrl('/css/layout.css'));
+        $this->headLink()->appendStylesheet($this->baseUrl('/css/openid.css'));
+
+        echo $this->headLink();
+        ?>
 
         <?php
         $this->headScript()->appendFile($this->baseUrl('/js/jquery-1.4.4.min.js'));

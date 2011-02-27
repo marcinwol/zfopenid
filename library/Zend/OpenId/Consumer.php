@@ -862,11 +862,11 @@ class Zend_OpenId_Consumer {
                 $params['openid.identity'] = 'http://specs.openid.net/auth/2.0/identifier_select';
                 $params['openid.claimed_id'] = 'http://specs.openid.net/auth/2.0/identifier_select';
                 $params['openid.ns.ax'] = 'http://openid.net/srv/ax/1.0';
-                $params['openid.ax.mode'] = 'fetch_request';                
+                $params['openid.ax.mode'] = 'fetch_request';
                 $params['openid.ns.pape'] = 'http://specs.openid.net/extensions/pape/1.0';
-            }
-
-            if ($server == 'http://www.myopenid.com/server') {
+            } else if ($server == 'https://open.login.yahooapis.com/openid/op/auth') {
+             
+            } else if ($server == 'http://www.myopenid.com/server') {
                 $params['openid.ns.sreg'] = 'http://openid.net/extensions/sreg/1.1';
                 $params['openid.ns.pape'] = 'http://specs.openid.net/extensions/pape/1.0';
                 $params['openid.pape.preferred_auth_policies'] = '';
