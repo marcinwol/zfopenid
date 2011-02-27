@@ -17,6 +17,7 @@ In some cases I made slight modifications to the above elements.
 
 INSTALATION
 ===========
+
 The application contains everything that it needs to run,including full
 Zend Framework 1.11.3. The exceptions are Facebook and Twitter app keys that need to
 be included in appkeys.ini. You need to register your copy of this application
@@ -24,5 +25,11 @@ with Facebook and Twitter and obtain the keys.
 
 Zend_Auth_Adapter_OpenId uses file based storage. For this reason, the application
 must be able to create, write and read APPLICATION_PATH . '/../tmp' folder.
+
+
+DEMO
+====
+The demo of this application is at:
+http://www.mwol.born2die.eu/zfopenid/public
 
 
