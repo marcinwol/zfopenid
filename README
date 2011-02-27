@@ -1,30 +1,28 @@
 README
 ======
 
-This directory should be used to place project specfic documentation including
-but not limited to project notes, generated API/phpdoc documentation, or
-manual files generated or hand written.  Ideally, this directory would remain
-in your development environment only and should not be deployed with your
-application to it's final production location.
+This is an example Zend Framework 1.11.3 application that uses OpenID (Google,
+Yahoo, MyOpenId, AOL, OpenId) as well as Facebook Connect and Twitter Oauth for
+authorization of users.
+
+To make it all work I used the following elements:
+ - openid-selector
+ - My_Auth_Adapter_Facebook by Michael Krotscheck
+ - My_Auth_Adapter_Oauth and My_Auth_Adapter_Oauth_Twitter by Jason Austin
+ - My_OpenId_Extension_AttributeExchange by Chris Bisnett
+ - Patched Zend_OpenId_Custumer (http://framework.zend.com/issues/browse/ZF-6905)
+
+In some cases I made slight modifications to the above elements.
 
 
-Setting Up Your VHOST
-=====================
+INSTALATION
+===========
+The application contains everything that it needs to run,including full
+Zend Framework 1.11.3. The exceptions are Facebook and Twitter app keys that need to
+be included in appkeys.ini. You need to register your copy of this application
+with Facebook and Twitter and obtain the keys.
 
-The following is a sample VHOST you might want to consider for your project.
+Zend_Auth_Adapter_OpenId uses file based storage. For this reason, the application
+must be able to create, write and read APPLICATION_PATH . '/../tmp' folder.
 
-<VirtualHost *:80>
-   DocumentRoot "/opt/lampp/htdocs/zfopenid/public"
-   ServerName zfopenid.local
 
-   # This should be omitted in the production environment
-   SetEnv APPLICATION_ENV development
-
-   <Directory "/opt/lampp/htdocs/zfopenid/public">
-       Options Indexes MultiViews FollowSymLinks
-       AllowOverride All
-       Order allow,deny
-       Allow from all
-   </Directory>
-
-</VirtualHost>
