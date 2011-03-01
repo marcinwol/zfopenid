@@ -42,7 +42,7 @@ class UserController extends Zend_Controller_Action {
         $oauth_token = $this->getRequest()->getParam('oauth_token', null);
 
 
-        // do the first query to the openid provider
+        // do the first query to an authentication provider
         if ($openid_identifier) {
 
             if ('https://www.twitter.com' == $openid_identifier) {
