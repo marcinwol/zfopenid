@@ -10,7 +10,7 @@ To make it all work I used the following elements:
  - My_Auth_Adapter_Facebook by Michael Krotscheck
  - My_Auth_Adapter_Oauth and My_Auth_Adapter_Oauth_Twitter by Jason Austin
  - My_OpenId_Extension_AttributeExchange by Chris Bisnett
- - Patched Zend_OpenId_Constumer (http://framework.zend.com/issues/browse/ZF-6905)
+ - Patched Zend_OpenId_Consumer (http://framework.zend.com/issues/browse/ZF-6905)
 
 In some cases I made slight modifications to the above elements.
 
@@ -19,7 +19,7 @@ INSTALATION
 ===========
 
 The application contains everything that it needs to run, including full
-Zend Framework 1.11.3 (with patched  Zend_OpenId_Constumer). The exceptions are Facebook and Twitter app keys that need to
+Zend Framework 1.11.3 (with patched  Zend_OpenId_Consumer). The exceptions are Facebook and Twitter app keys that need to
 be included in appkeys.ini. Normally, Facebook and Twitter require every application that uses their API to be 
 registered with them. Once an application is registered,  a user gets app id and a secret key. When you have this keys 
 you need to make an appkeys.ini file ( appkeys_example.ini example provided) with your own keys.
