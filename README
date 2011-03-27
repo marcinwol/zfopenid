@@ -5,14 +5,14 @@ This is an example Zend Framework 1.11.3 application that uses OpenID (Google,
 Yahoo, MyOpenId, AOL, OpenId) as well as Facebook Connect and Twitter Oauth for
 authentication of users.
 
-To make it all work I used the following elements:
+To make it all work the following elements were used:
  - openid-selector
  - My_Auth_Adapter_Facebook by Michael Krotscheck
  - My_Auth_Adapter_Oauth and My_Auth_Adapter_Oauth_Twitter by Jason Austin
  - My_OpenId_Extension_AttributeExchange by Chris Bisnett
  - Patched Zend_OpenId_Consumer (http://framework.zend.com/issues/browse/ZF-6905)
 
-In some cases I made slight modifications to the above elements.
+In some cases some slight modifications were made to the above elements.
 
 
 INSTALATION
