@@ -21,7 +21,7 @@ INSTALATION
 The application contains everything that it needs to run, including full
 Zend Framework 1.11.3 (with patched  Zend_OpenId_Consumer). The exceptions are Facebook and Twitter app keys that need to
 be included in appkeys.ini. Normally, Facebook and Twitter require every application that uses their API to be 
-registered with them. Once an application is registered,  a user gets app id and a secret key. When you have this keys 
+registered with them. Once an application is registered,  a user gets app id and a secret key. When you have those keys 
 you need to make an appkeys.ini file ( appkeys_example.ini example provided) with your own keys.
 
 Zend_Auth_Adapter_OpenId uses file based storage. For this reason, the application
