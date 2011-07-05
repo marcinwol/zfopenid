@@ -53,11 +53,11 @@ function houseshare_click() {
 //   }
 
 var providers_small = {
-    livejournal : {
+   /* livejournal : {
         name : 'LiveJournal',
         label : 'Enter your Livejournal username.',
         url : 'http://{username}.livejournal.com/'
-    },
+    }, */
     /* flickr: {
 		name: 'Flickr',        
 		label: 'Enter your Flickr username.',
@@ -68,7 +68,7 @@ var providers_small = {
 		label: 'Enter your Technorati username.',
 		url: 'http://technorati.com/people/technorati/{username}/'
 	}, */
-    wordpress : {
+ /*   wordpress : {
         name : 'Wordpress',
         label : 'Enter your Wordpress.com username.',
         url : 'http://{username}.wordpress.com/'
@@ -82,7 +82,7 @@ var providers_small = {
         name : 'Verisign',
         label : 'Your Verisign username',
         url : 'http://{username}.pip.verisignlabs.com/'
-    },
+    }, */
     /* vidoop: {
 		name: 'Vidoop',
 		label: 'Your Vidoop username',
@@ -93,7 +93,7 @@ var providers_small = {
 		label: 'Your Launchpad username',
 		url: 'https://launchpad.net/~{username}'
 	}, */
-    claimid : {
+  /*  claimid : {
         name : 'ClaimID',
         label : 'Your ClaimID username',
         url : 'http://claimid.com/{username}'
@@ -107,7 +107,7 @@ var providers_small = {
         name : 'Google Profile',
         label : 'Enter your Google Profile username',
         url : 'http://www.google.com/profiles/{username}'
-    }
+    } */
 };
 
 openid.locale = 'en';
