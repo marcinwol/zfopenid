@@ -20,6 +20,7 @@
 
                             <?php
                             foreach ($this->identity['properties'] as $p => $v) {
+                               if (is_array($v)) {$v=$v[0]->name;}
                                echo $this->partial('_partial/properties.phtml', array($p, $v) );
                             }
                             ?>
