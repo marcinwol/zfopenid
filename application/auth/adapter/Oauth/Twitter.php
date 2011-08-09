@@ -90,6 +90,7 @@ class My_Auth_Adapter_Oauth_Twitter extends My_Auth_Adapter_Oauth {
         $this->_oathConfig = array(
             'callbackUrl' => $this->_callbackUrl,
             'siteUrl' => 'http://twitter.com/oauth',
+            'authorizeUrl' => 'https://api.twitter.com/oauth/authenticate',
             'consumerKey' => $this->_consumerKey,
             'consumerSecret' => $this->_consumerSecret,
         );
