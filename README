@@ -27,6 +27,8 @@ you need to make an appkeys.ini file ( appkeys_example.ini example provided) wit
 Zend_Auth_Adapter_OpenId uses file based storage. For this reason, the application
 must be able to create, write and read APPLICATION_PATH . '/../tmp' folder.
 
+It was reported that extension=php_openssl.dll should also be enabled in php.ini.
+
 
 DEMO
 ====
