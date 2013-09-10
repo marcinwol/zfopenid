@@ -1,8 +1,0 @@
-tests/log
-.zfproject.xml
-*.bak
-*.orig
-/.gitignore.swp
-/application/configs/appkeys.ini
-nbproject
-/tmp

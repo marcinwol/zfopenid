@@ -1,0 +1,13 @@
+{
+    "name": "zf1-open-id/zf1-open-id",
+    "description": "ZF1 OpenId Library",
+    "authors": [
+        {
+            "name": "marcinwol",
+            "email": "none@none.com"
+        }
+    ],
+    "require": {
+
+    }
+}
